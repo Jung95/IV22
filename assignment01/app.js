@@ -100,7 +100,7 @@ function drawTask4b(two) {
     let cnt = 0
     for (const [key, value] of Object.entries(data['tempAnomalies'])) {
         let color = colorScale(value).hex();
-        let bar = two.makeRectangle(posInitX + (spacingPixel * cnt), y, barWidth, maxBarHeight)
+        let bar = two.makeRectangle(posInitX + (spacingPixel * cnt), y, barWidth, maxBarHeight-300)
         bar.linewidth = linewidth
         bar.fill = color
 
