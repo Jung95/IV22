@@ -33,7 +33,8 @@ function draw(two) {
       temp = temp + kde;
     }
     // 1/n*h 
-    Y.push((1 / (n * h)) * temp); // TODO: replace by KDE(x)
+    temp = (1 / (n * h)) * temp
+    Y.push(temp); // TODO: replace by KDE(x)
   }
 
   drawAxesForTask3(two);
