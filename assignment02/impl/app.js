@@ -16,28 +16,21 @@ function draw(two) {
   const Y = []; // Y positions
   /*
   The accumulation of ink drops (=kernels) at any given point 𝒙 on the canvas is expressed by this formula:
-  f_h(x) = 1/n*h sum i=1=>n K((x-x_i) / h)
+  f_h(x) = 1/n*h sum i=1=>n K((x-x_i) / h) with K(u) = 1/ sqrt(1/PI)*e^(u^2/-2)
   */
-  let xiData = [];
-  let range = 1000
-  let startPoint = 0;
-  for (let i = 0; i <= range; i++) {
-    xiData[i] = (startPoint + (i * 0.1)).toFixed(1);
-  }
-
+  //bandwidth h is 0.5
   const h = 0.5
   const n = numbers.length
   let data = [];
-  let kernel = [];
   //Create the density estimate
-  for (let i = 0; i < xiData.length; i++) {
+  // i is [0,100] with step size 0.1
+  for (let i = 0; i <= 1000; i++) {
     let temp = 0;
-    kernel.push([]);
-    kernel[i].push(new Array(n));
+    // sum i=1=>n K((x-x_i) / h)
     for (let j = 0; j < n; j++) {
-      temp = temp + gaussianKDE((numbers[j] -xiData[i])/ h);
-      kernel[i][j] = gaussianKDE((numbers[j] -xiData[i])/ h);
+      temp = temp + gaussianKDE((numbers[j] - (i * 0.1).toFixed(1) )/ h);
     }
+    // 1/n*h 
     data.push((1 / (n*h)) * temp);
   }
   for (let x = 0; x <= 100; x += 0.1) {
@@ -52,5 +45,6 @@ function draw(two) {
 }
 
 function gaussianKDE(u) {
+  // K(u) = 1/ sqrt(1/PI)*e^(u^2/-2)
   return (1 / Math.sqrt(2 * Math.PI)) * Math.exp(Math.pow(u, 2) / -2);
 }
