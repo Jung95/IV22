@@ -39,13 +39,15 @@ function draw(two) {
         rect.noStroke();
         rectsB.add(rect)
     }
-    //log randomBar
+    //log changed randomBar
     console.log(randomBar)
+    
     const promise = getFPS();
     promise.then((fps) => {
         //bind to update callback which will be called on every frame
         two.bind('update',
             frameCount => {
+                 //this is called roughly *fps* times per second
                 if (frameCount % (fps * 4 + 20) == 0) {
                     //Show plot A for 2×fps frames 
                     two.add(rectsA)
@@ -59,10 +61,6 @@ function draw(two) {
                     //Show nothing for 10 frames
                     two.remove(rectsB)
                 }
-                //this is called roughly *fps* times per second
-                //rect.width = frameCount % (2*fps);
-                //rect.translation.x = 200 + rect.width / 2;
-
             });
     });
 }
