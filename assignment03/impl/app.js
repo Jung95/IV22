@@ -9,7 +9,7 @@ function getTutorialInfo() {
 }
 
 function draw(two) {
-    //skeleton
+    //  each bar has a unique color
     const colorScale = getColorScale(24);
     //  array of 24 entries with random numbers between 10 and 400
     const arrayA = new Array()
