@@ -27,24 +27,40 @@ function draw(two) {
 
 class StackedTree {
     constructor(data, width, height, padding) {
+        // tree data
         this.data = data
+        // canvas width
         this.width = width
+        // canvas height
         this.height = height
+        //right, top padding
         this.padding = padding
+        // init max depth
         this.maxDepth = 0;
+        // init total weight
         this.totalweight = 0;
         this.xPoint = this.padding
         this.parserData(this.data, this.maxDepth)
+        //set height for a cell
+        this.nodeHeight = parseInt((this.height - padding * 2 - (this.maxDepth + 1) * (this.padding * 2)) / (this.maxDepth + 1))
+        console.log(this.nodeHeight)
+        //set multiply for a cell width
+        this.nodeWidth = parseInt((this.width - padding) / this.totalweight)
+        // if multiply for a cell width is odd, make even with -1
+        if (this.nodeWidth % 2 == 1) {
+            this.nodeWidth = this.nodeWidth - 1
+        }
+        // sketch tree
         this.tree = this.drawTree(this.data)
-        //this.totalWeight = this.parsedData['weight']
-        //this.totalDepth = this.parsedData['depth']
     }
 
     get sketch() {
+        //getter for tree sketch
         return this.tree
     }
 
     parserData(data, depth) {
+        // set max Depth and total Width
         if (depth > this.maxDepth) {
             this.maxDepth = depth
         }
@@ -60,6 +76,7 @@ class StackedTree {
     }
 
     hasChildren(node) {
+        // if a node has children, return true
         let result = false
         if (node['children'] != undefined) {
             result = true
@@ -68,53 +85,56 @@ class StackedTree {
     }
 
     drawTree(data) {
+        // implemented with recursive function
+        // return two.group with rects of children and rect of itself(data)
         let group = new Two.Group();
         if (!this.hasChildren(data)) {
-            this.xPoint = this.xPoint + data['weight'] * 18
-            let rect = new Two.Rectangle(this.xPoint - data['weight'] * 18 / 2, 52, data['weight'] * 18, 100);
+            // set x Point
+            this.xPoint = this.xPoint + data['weight'] * this.nodeWidth
+            // make rect for leaf node
+            let rect = new Two.Rectangle(this.xPoint - (data['weight'] * this.nodeWidth / 2), (this.nodeHeight + this.padding), data['weight'] * this.nodeWidth, this.nodeHeight);
+            // set Color Orange
             rect.fill = 'rgb(250, 130, 5)';
+            // set linewidth
             rect.linewidth = 1
+            // add rect into group
             group.add(rect)
+            // make text
+            let text = new Two.Text(data['name'], this.xPoint - (data['weight'] * this.nodeWidth / 2), (this.nodeHeight + this.padding), {
+                size: 11,
+            })
+            //rotate text
+            text.rotation = 3.14 * 0.5
+            // add text
+            group.add(text)
         } else {
             data['children'].forEach(child => {
                 let childGroup = this.drawTree(child)
-                childGroup.position.y = 100
+                // move down child node rect.
+                childGroup.position.y = this.nodeHeight
+                // add child node rect. into parent group
                 group.add(childGroup)
             });
+            //get position and total width of children rect.
             let childrenRectBounding = group.getBoundingClientRect()
-            let rect = new Two.Rectangle((childrenRectBounding['right'] - childrenRectBounding['width'] / 2), 52, childrenRectBounding['width'] - 1, 100);
+            // make rect for parant node 
+            let rect = new Two.Rectangle((childrenRectBounding['right'] - childrenRectBounding['width'] / 2), (this.nodeHeight + this.padding), childrenRectBounding['width'] - 1, this.nodeHeight);
+            // set Color blue
             rect.fill = 'rgb(173, 199, 234)';
+            // set linewidth
             rect.linewidth = 1
+            // add rect into group
             group.add(rect)
-
+            // make text
+            let text = new Two.Text(data['name'], (childrenRectBounding['right'] - childrenRectBounding['width'] / 2), (this.nodeHeight + this.padding), {
+                size: 11,
+            })
+            //rotate text
+            text.rotation = 3.14 * 0.5
+            // add text
+            group.add(text)
         }
+
         return group
     }
 }
-
-let widthPoint = 5
-/*
-function drawTree(data) {
-    let group = new Two.Group();
-    if (!hasChildren(data)) {
-        widthPoint = widthPoint + data['weight'] * 18
-        let rect = new Two.Rectangle(widthPoint - data['weight'] * 18 / 2, 52, data['weight'] * 18, 100);
-        rect.fill = 'rgb(250, 130, 5)';
-        rect.linewidth = 1
-        group.add(rect)
-    } else {
-        data['children'].forEach(child => {
-            let childGroup = drawTree(child)
-            childGroup.position.y = 100
-            group.add(childGroup)
-        });
-        let childrenRectBounding = group.getBoundingClientRect()
-        let rect = new Two.Rectangle((childrenRectBounding['right'] - childrenRectBounding['width'] / 2), 52, childrenRectBounding['width'] - 1, 100);
-        rect.fill = 'rgb(173, 199, 234)';
-        rect.linewidth = 1
-        group.add(rect)
-
-    }
-    return group
-}
-*/
