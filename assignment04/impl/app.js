@@ -43,7 +43,6 @@ class StackedTree {
         this.parserData(this.data, this.maxDepth)
         //set height for a cell
         this.nodeHeight = parseInt((this.height - padding * 2 - (this.maxDepth + 1) * (this.padding * 2)) / (this.maxDepth + 1))
-        console.log(this.nodeHeight)
         //set multiply for a cell width
         this.nodeWidth = parseInt((this.width - padding) / this.totalweight)
         // if multiply for a cell width is odd, make even with -1
