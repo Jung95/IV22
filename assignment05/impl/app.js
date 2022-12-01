@@ -40,13 +40,13 @@ function fdl(graph, iteration) {
         //for 𝑢 ∈ 𝑉 do
         graph.nodes.forEach((nodeU) => {
             //if (𝑢 ≠ 𝑣) then
-            if(nodeV.nodeID !== nodeU.nodeID){
+            if (nodeV.nodeID !== nodeU.nodeID) {
                 //∆← 𝑣. 𝑝𝑜𝑠 − 𝑢. 𝑝𝑜𝑠 ; /* vector between u and v */
                 let vectorVU = Two.Vector.sub(nodeV.position, nodeU.position)
                 let d = vectorVU.length()
                 //𝑣. 𝑑𝑖𝑠𝑝 ← 𝑣. 𝑑𝑖𝑠𝑝 + Δ/ | Δ | ∗ 𝑓𝑟( ∆ ) ;  /* displacement from repulsive forces */
-                nodeV.displacement.x = nodeV.displacement.x + ((vectorVU.x/d)*fr(d))
-                nodeV.displacement.y = nodeV.displacement.y + ((vectorVU.y/d)*fr(d))
+                vectorVU = vectorVU.multiply(fr(d)/d)
+                nodeV.displacement= nodeV.displacement.add(vectorVU)
             }
         });
     });
@@ -57,11 +57,11 @@ function fdl(graph, iteration) {
             let vectorVU = Two.Vector.sub(nodeV.position, nodeU.position)
             let d = vectorVU.length()
             //𝑒. 𝑣. 𝑑𝑖𝑠𝑝 ← 𝑒. 𝑣. 𝑑𝑖𝑠𝑝 − Δ/ | Δ | ∗ 𝑓𝑎( ∆ ); /* displacement from attractive forces */
-            nodeV.displacement.x = nodeV.displacement.x - ((vectorVU.x/d)*fa(d))
-            nodeV.displacement.y = nodeV.displacement.y - ((vectorVU.y/d)*fa(d))
+            vectorVU = vectorVU.multiply(fa(d)/d)
+            nodeV.displacement = nodeV.displacement.sub(vectorVU)
             //𝑒. 𝑢. 𝑑𝑖𝑠𝑝 ← 𝑒. 𝑢. 𝑑𝑖𝑠𝑝 + Δ/ | Δ | ∗ 𝑓𝑎( ∆ ); /* displacement from attractive forces */
-            nodeU.displacement.x = nodeU.displacement.x + ((vectorVU.x/d)*fa(d))
-            nodeU.displacement.y = nodeU.displacement.y + ((vectorVU.y/d)*fa(d))
+            nodeU.displacement = nodeU.displacement.add(vectorVU)
+
         });
     });
 
