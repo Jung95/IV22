@@ -35,8 +35,7 @@ function fdl(graph, iteration) {
     //foreach 𝑣 ∈ 𝑉 do
     graph.nodes.forEach((nodeV) => {
         //𝑣. 𝑑𝑖𝑠𝑝 ≔ 0; /* initialize displacement vector */
-        nodeV.displacement.x = 0
-        nodeV.displacement.y = 0
+        nodeV.displacement = new Two.Vector(0,0)
         //for 𝑢 ∈ 𝑉 do
         graph.nodes.forEach((nodeU) => {
             //if (𝑢 ≠ 𝑣) then
