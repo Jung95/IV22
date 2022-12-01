@@ -3,7 +3,7 @@
 function getTutorialInfo() {
     return {
         exerciseNum: 5,
-        groupNames: "Jane Doe, Max Mustermann",
+        groupNames: "Jongho Jung, Nandita Jha",
         isAnimated: true
     }
 }
