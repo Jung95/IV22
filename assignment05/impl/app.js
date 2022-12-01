@@ -73,7 +73,7 @@ function fdl(graph, iteration) {
         nodeV.position.y = nodeV.position.y + (nodeV.displacement.y / displacementLength) *  Math.min(displacementLength,t)
         //𝑣. 𝑝𝑜𝑠. 𝑥 ← min(𝑊/2, max(−𝑊/2, 𝑣. 𝑝𝑜𝑠. 𝑥)); 
         nodeV.position.x = Math.min(drawingArea.width, Math.max(0,  nodeV.position.x))
-        nodeV.position.y = Math.min(drawingArea.height, Math.max(0,  nodeV.position.x))
+        nodeV.position.y = Math.min(drawingArea.height, Math.max(0,  nodeV.position.y))
 
     });
 }
