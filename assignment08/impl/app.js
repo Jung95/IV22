@@ -135,6 +135,7 @@ function initQuadtree(circles, x0, x1, y0, y1) {
 
   return {
     isLeaf: false,
+    circles: null,
     x0: x0,
     x1: x1,
     y0: y0,
