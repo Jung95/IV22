@@ -188,11 +188,6 @@ function getQuadtreeAreas(quadtreeRoot) {
 function quadtreeSearchAround(quadtreeRoot, x, y, radius) {
   // TODO: implement search in quadtree
   const candidates = [];
-  // Define 4 Points
-  let A = (x - radius, y - radius); // Top Left
-  let B = (x + radius, y - radius); // Top Right
-  let C = (x + radius, y + radius); // Bottom Right
-  let D = (x - radius, y + radius); // Bottom Left
   if (quadtreeRoot["isLeaf"]) {
     return quadtreeRoot["circles"];
   } else {
