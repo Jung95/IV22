@@ -31,8 +31,6 @@ const canvasLength = 512;
  *                                    `getClosestCircles`.
  */
 function initQuadtree(circles, x0, x1, y0, y1) {
-  //console.log(x0, x1, y0, y1);
-  //circles[0].position.x
   // TODO
   //Calc Now Depth
   let nowDepth = 0;
@@ -42,7 +40,7 @@ function initQuadtree(circles, x0, x1, y0, y1) {
     length = length * 2;
   }
   // if now depth is bigger than max depth, retrun leaf-node
-  if (nowDepth > quadtreeMaxDepth) {
+  if (nowDepth >= quadtreeMaxDepth) {
     let node = {
       isLeaf: true,
       circles: circles,
@@ -55,11 +53,11 @@ function initQuadtree(circles, x0, x1, y0, y1) {
     return node;
   }
 
-  // if number of circle is 0, return leaf-node with zero - circles
+  // if this node has 0 or 1 circle , return leaf-node
   if (circles.length <= 1) {
     let node = {
       isLeaf: true,
-      circles: null,
+      circles: circles,
       x0: x0,
       x1: x1,
       y0: y0,
@@ -68,12 +66,11 @@ function initQuadtree(circles, x0, x1, y0, y1) {
     };
     return node;
   }
-  //Check Merge
+  // If this node is not leaf node,
 
-  //Split Quad
   let subWidth = (x1 - x0) / 2;
   let subHeight = (y1 - y0) / 2;
-  // index
+  // index circle
   let TopLeftQuad = new Array();
   let TopRightQuad = new Array();
   let BottomLeftQuad = new Array();
@@ -160,9 +157,8 @@ function getQuadtreeAreas(quadtreeRoot) {
   let result = new Array();
   if (quadtreeRoot["isLeaf"] == false) {
     quadtreeRoot["children"].forEach((child) => {
-      result.push(getQuadtreeAreas(child));
+      result.push(...getQuadtreeAreas(child));
     });
-    result = result[0].concat(result[1], result[2], result[3]);
   } else {
     result.push({
       x0: quadtreeRoot["x0"],
@@ -192,5 +188,64 @@ function getQuadtreeAreas(quadtreeRoot) {
 function quadtreeSearchAround(quadtreeRoot, x, y, radius) {
   // TODO: implement search in quadtree
   const candidates = [];
+  // Define 4 Points
+  let A = (x - radius, y - radius); // Top Left
+  let B = (x + radius, y - radius); // Top Right
+  let C = (x + radius, y + radius); // Bottom Right
+  let D = (x - radius, y + radius); // Bottom Left
+  if (quadtreeRoot["isLeaf"]) {
+    return quadtreeRoot["circles"];
+  } else {
+    quadtreeRoot["children"].forEach((child) => {
+      //check collision
+      if (collision(child, x, y, radius)) {
+        candidates.push(...quadtreeSearchAround(child, x, y, radius));
+      }
+    });
+  }
+
   return candidates;
+}
+
+function collision(child, x, y, radius) {
+  let a = {
+    x1: child.x0,
+    x2: child.x1,
+    y1: child.y0,
+    y2: child.y1,
+  };
+  let b = {
+    x1: x - radius,
+    x2: x + radius,
+    y1: y - radius,
+    y2: y + radius,
+  };
+  if (contains(a, b)) {
+    return true;
+  }
+  if (overlaps(a, b)) {
+    return true;
+  }
+  if (touches(a, b)) {
+    return true;
+  }
+  return false;
+}
+
+function contains(a, b) {
+  return !(b.x1 < a.x1 || b.y1 < a.y1 || b.x2 > a.x2 || b.y2 > a.y2);
+}
+
+function overlaps(a, b) {
+  if (a.x1 >= b.x2 || b.x1 >= a.x2) return false;
+  if (a.y1 >= b.y2 || b.y1 >= a.y2) return false;
+
+  return true;
+}
+
+function touches(a, b) {
+  if (a.x1 > b.x2 || b.x1 > a.x2) return false;
+  if (a.y1 > b.y2 || b.y1 > a.y2) return false;
+
+  return true;
 }
