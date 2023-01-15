@@ -8,7 +8,7 @@ function getTutorialInfo() {
 }
 
 // feel free to tweak this DURING TESTING
-const quadtreeMaxDepth = 3; //default 10
+const quadtreeMaxDepth = 10; //default 10
 const canvasLength = 512;
 
 /**
@@ -56,7 +56,7 @@ function initQuadtree(circles, x0, x1, y0, y1) {
   }
 
   // if number of circle is 0, return leaf-node with zero - circles
-  if (circles.length == 0) {
+  if (circles.length <= 1) {
     let node = {
       isLeaf: true,
       circles: null,
@@ -157,7 +157,22 @@ function initQuadtree(circles, x0, x1, y0, y1) {
  *                            to draw the squares.
  */
 function getQuadtreeAreas(quadtreeRoot) {
-  return []; // TODO
+  let result = new Array();
+  if (quadtreeRoot["isLeaf"] == false) {
+    quadtreeRoot["children"].forEach((child) => {
+      result.push(getQuadtreeAreas(child));
+    });
+    result = result[0].concat(result[1], result[2], result[3]);
+  } else {
+    result.push({
+      x0: quadtreeRoot["x0"],
+      x1: quadtreeRoot["x1"],
+      y0: quadtreeRoot["y0"],
+      y1: quadtreeRoot["y1"],
+    });
+  }
+
+  return result; // TODO
 }
 
 /**
